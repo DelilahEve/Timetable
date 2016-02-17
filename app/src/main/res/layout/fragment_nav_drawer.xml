@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_light" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:paddingLeft="16dp"
+        android:gravity="center_vertical"
+        android:textColor="#FFF"
+        android:background="@color/colorPrimary"
+        android:textSize="20sp"
+        android:text="@string/app_name" />
+
+    <TextView
+        android:id="@+id/dayViewButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textColor="#222"
+        android:textSize="16sp"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:text="Day View"
+        android:drawablePadding="16dp"
+        android:drawableLeft="@drawable/ic_action_day_view"
+        android:clickable="true"
+        android:background="?attr/selectableItemBackground" />
+
+    <TextView
+        android:id="@+id/weekViewButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textColor="#222"
+        android:textSize="16sp"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:text="Week View"
+        android:drawablePadding="16dp"
+        android:drawableLeft="@drawable/ic_action_week_view"
+        android:clickable="true"
+        android:background="?attr/selectableItemBackground" />
+
+    <TextView
+        android:id="@+id/monthViewButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textColor="#222"
+        android:textSize="16sp"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:text="Month View"
+        android:drawablePadding="16dp"
+        android:drawableLeft="@drawable/ic_action_month_view"
+        android:clickable="true"
+        android:background="?attr/selectableItemBackground" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/settingsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textColor="#222"
+        android:textSize="16sp"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:text="Settings"
+        android:drawablePadding="16dp"
+        android:drawableLeft="@drawable/ic_action_settings"
+        android:clickable="true"
+        android:background="?attr/selectableItemBackground" />
+
+</LinearLayout>
