@@ -1,39 +1,51 @@
 package ca.delilaheve.timetable.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
+import ca.delilaheve.timetable.EventActivity;
 import ca.delilaheve.timetable.R;
 import ca.delilaheve.timetable.data.Event;
 import ca.delilaheve.timetable.database.Database;
 
-public class WeekViewFragment extends Fragment {
+public class DayViewFragment extends Fragment {
 
     private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_weekview, container, false);
-
-
+        view = inflater.inflate(R.layout.fragment_day_view, container, false);
 
         GridLayout calendar = (GridLayout) view.findViewById(R.id.calendarItems);
 
         Database db = new Database(getActivity());
         ArrayList<Event> events = db.getEventList();
 
+        String currentDay = new SimpleDateFormat("EEEE").format(new Date());
+
+        TextView day = (TextView) view.findViewById(R.id.day);
+        day.setText(currentDay);
+
         if(events != null)
             for(Event event : events) {
-                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
 
-                int rowStart, rowEnd, rowSpan, column, hour, minute;
+                if(event.getDay().equals(currentDay))
+                    continue;
+
+                // Is for current day, add layout:
+
+                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+                int rowStart, rowEnd, rowSpan, hour, minute;
                 String[] time;
 
                 // Determine start row
@@ -51,21 +63,8 @@ public class WeekViewFragment extends Fragment {
                 // Determine row span
                 rowSpan = rowEnd - rowStart;
 
-                // Determine column
-                String[] days = getResources().getStringArray(R.array.weekdays);
-
-                column = -1;
-                for(int i = 0; i < days.length; i++)
-                    if(days[i].equalsIgnoreCase(event.getDay()))
-                        column = i;
-
-                // is invalid entry: ignore
-                if(column == -1)
-                    continue;
-
-                // set row and column dimensions
+                // set row dimensions
                 params.rowSpec = GridLayout.spec(rowStart, rowSpan);
-                params.columnSpec = GridLayout.spec(column);
 
                 // add view to grid
                 View v = inflater.inflate(R.layout.dialog_calendar_itemview, container, false);
@@ -73,17 +72,19 @@ public class WeekViewFragment extends Fragment {
                 calendar.addView(v);
 
                 // set click listener for view
-                setClick(v);
+                setClick(v, event);
             }
 
         return view;
     }
 
-    public void setClick(View v) {
+    public void setClick(View v, final Event event) {
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Go to view event
+                Intent i = new Intent(getActivity(), EventActivity.class);
+                i.putExtra("event", event);
+                startActivity(i);
             }
         });
     }

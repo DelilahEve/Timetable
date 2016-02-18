@@ -1,12 +1,9 @@
 package ca.delilaheve.timetable;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.view.View;
-import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,13 +11,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.SimpleAdapter;
-import android.widget.Spinner;
 
+import ca.delilaheve.timetable.dialog.AddEventDialog;
+import ca.delilaheve.timetable.fragment.DayViewFragment;
 import ca.delilaheve.timetable.fragment.NavDrawerFragment;
-import ca.delilaheve.timetable.fragment.WeekviewFragment;
+import ca.delilaheve.timetable.fragment.SettingsFragment;
+import ca.delilaheve.timetable.fragment.WeekViewFragment;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final int MODE_DAY = 0;
+    public static final int MODE_WEEK = 1;
+
+    private WeekViewFragment weekFragment;
+    private DayViewFragment dayFragment;
+
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Set Drawer toggle
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
@@ -43,13 +49,25 @@ public class MainActivity extends AppCompatActivity {
         // Add Nav drawer
         manager.beginTransaction().replace(R.id.leftDrawer, new NavDrawerFragment()).commit();
 
-        Fragment fragment = new WeekviewFragment();
+        weekFragment = new WeekViewFragment();
+        dayFragment = new DayViewFragment();
 
-        // Check settings for default view to use here
-        // then change fragment to the default
+        // Check Preferences
+        SharedPreferences preferences = getSharedPreferences(SettingsFragment.prefsFile, 0);
+        int viewMode = preferences.getInt(SettingsFragment.KEY_DEFAULT_VIEW, MODE_WEEK);
 
-        // Add default view fragment
-        manager.beginTransaction().replace(R.id.contentFrame, fragment).commit();
+        // Add Fragment
+        FragmentTransaction transaction = manager.beginTransaction();
+        switch (viewMode) {
+            case MODE_DAY:
+                transaction.replace(R.id.contentFrame, dayFragment);
+                break;
+            case MODE_WEEK:
+            default:
+                transaction.replace(R.id.contentFrame, weekFragment);
+                break;
+        }
+        transaction.commit();
     }
 
     @Override
@@ -72,10 +90,36 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_add_event:
-                // add an event
+                AddEventDialog dialog = new AddEventDialog(this);
+                dialog.show();
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setViewMode(int viewMode) {
+        FragmentManager manager = getSupportFragmentManager();
+
+        switch (viewMode) {
+            case MODE_DAY:
+                manager.beginTransaction().replace(R.id.contentFrame, dayFragment).commit();
+                break;
+            case MODE_WEEK:
+                manager.beginTransaction().replace(R.id.contentFrame, weekFragment).commit();
+                break;
+        }
+    }
+
+    public void openDrawer() {
+        drawer.openDrawer(GravityCompat.START);
+    }
+
+    public void closeDrawer() {
+        drawer.closeDrawer(GravityCompat.START);
+    }
+
+    private void addUserEvent() {
+        // Add a user event
     }
 }

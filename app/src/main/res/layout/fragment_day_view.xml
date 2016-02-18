@@ -12,39 +12,11 @@
         <Space />
 
         <TextView
+            android:id="@+id/day"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:padding="8dp"
-            android:textColor="#222"
-            android:text="Mon"/>
-
-        <TextView
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:padding="8dp"
-            android:textColor="#222"
-            android:text="Tue"/>
-
-        <TextView
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:padding="8dp"
-            android:textColor="#222"
-            android:text="Wed"/>
-
-        <TextView
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:padding="8dp"
-            android:textColor="#222"
-            android:text="Thu"/>
-
-        <TextView
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:padding="8dp"
-            android:textColor="#222"
-            android:text="Fri"/>
+            android:textColor="#222" />
 
     </TableRow>
 
@@ -194,8 +166,7 @@
             android:layout_weight="1"
             android:layout_height="fill_parent"
             android:rowCount="44"
-            android:columnCount="5"
-            android:layout_span="5" />
+            android:columnCount="1" />
 
     </TableRow>
 

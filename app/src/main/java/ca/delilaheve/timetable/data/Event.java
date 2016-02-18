@@ -1,10 +1,15 @@
 package ca.delilaheve.timetable.data;
 
-public class Event {
+import java.io.Serializable;
+
+public class Event implements Serializable {
 
     private int id;
     private int classID;
     private int teacherID;
+
+    private String className;
+    private String courseCode;
 
     private String day;
     private String startTime;
@@ -13,7 +18,7 @@ public class Event {
     private String room;
     private String campus;
 
-    public Event(int id, int classID, int teacherID, String day, String startTime, String endTime, String room, String campus) {
+    public Event(int id, int classID, int teacherID, String day, String startTime, String endTime, String room, String campus, String className, String courseCode) {
         this.id = id;
         this.classID = classID;
         this.teacherID = teacherID;
@@ -22,6 +27,9 @@ public class Event {
         this.endTime = endTime;
         this.room = room;
         this.campus = campus;
+
+        this.className = className;
+        this.courseCode = courseCode;
     }
 
     public int getId() {
@@ -54,5 +62,13 @@ public class Event {
 
     public String getCampus() {
         return campus;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public String getCourseCode() {
+        return courseCode;
     }
 }

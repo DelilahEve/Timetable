@@ -6,11 +6,12 @@
 
     <string name="action_settings">Settings</string>
     <string name="action_add_event">Add Event</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_done">Done</string>
 
     <string-array name="account_types">
         <item>Student</item>
         <item>Teacher</item>
-        <item>Administrator</item>
     </string-array>
 
     <string-array name="weekdays">
@@ -19,5 +20,37 @@
         <item>Wednesday</item>
         <item>Thursday</item>
         <item>Friday</item>
+    </string-array>
+
+    <string-array name="mute_modes">
+        <item>Silent</item>
+        <item>Vibrate</item>
+    </string-array>
+
+    <string-array name="hours">
+        <item>12</item>
+        <item>11</item>
+        <item>10</item>
+        <item>9</item>
+        <item>8</item>
+        <item>7</item>
+        <item>6</item>
+        <item>5</item>
+        <item>4</item>
+        <item>3</item>
+        <item>2</item>
+        <item>1</item>
+    </string-array>
+
+    <string-array name="minutes">
+        <item>00</item>
+        <item>15</item>
+        <item>30</item>
+        <item>45</item>
+    </string-array>
+
+    <string-array name="time_periods">
+        <item>AM</item>
+        <item>PM</item>
     </string-array>
 </resources>

@@ -29,6 +29,11 @@ public class Table {
         db.execSQL(sql);
     }
 
+    public void deleteTable() {
+        String sql = "DROP TABLE IF EXISTS " + tableName;
+        db.execSQL(sql);
+    }
+
     public void add(ContentValues values) {
         db.insert(tableName, null, values);
     }
