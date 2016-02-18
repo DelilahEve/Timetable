@@ -49,4 +49,13 @@ public class SimpleAdapter extends BaseAdapter {
     public int getCount() {
         return options.length;
     }
+
+    public void setOptions(String[] options) {
+        this.options = options;
+        notifyDataSetChanged();
+    }
+
+    public String[] getOptions() {
+        return options;
+    }
 }

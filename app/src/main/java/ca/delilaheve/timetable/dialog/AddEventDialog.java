@@ -66,10 +66,24 @@ public class AddEventDialog {
 
                 Column[] columns = Database.COL_USER_EVENTS;
 
-                ContentValues values = new ContentValues();
-                //values.put(columns[1], );
+                String event, day, start, end, loc, notes;
 
-                //db.userEvents.add(values);
+                event = eventName.getText().toString();
+                day = weekdays.getSelectedItem().toString();
+                start = startTime.getText().toString();
+                end = endTime.getText().toString();
+                loc = location.getText().toString();
+                notes = eventDescription.getText().toString();
+
+                ContentValues values = new ContentValues();
+                values.put(columns[1].getColumnName(), event);
+                values.put(columns[2].getColumnName(), day);
+                values.put(columns[3].getColumnName(), start);
+                values.put(columns[4].getColumnName(), end);
+                values.put(columns[5].getColumnName(), loc);
+                values.put(columns[6].getColumnName(), notes);
+
+                db.userEvents.add(values);
             }
         });
 

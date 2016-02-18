@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 
+import ca.delilaheve.timetable.MainActivity;
 import ca.delilaheve.timetable.data.Event;
 
 public class Database extends SQLiteOpenHelper {
@@ -34,6 +35,7 @@ public class Database extends SQLiteOpenHelper {
     public static final String TABLE_USER_EVENTS = "userEvents";
     public static final Column[] COL_USER_EVENTS = {
             new Column("_id", Column.COL_TYPE_INT, true),
+            new Column("eventName", Column.COL_TYPE_TEXT, false),
             new Column("day", Column.COL_TYPE_TEXT, false),
             new Column("startTime", Column.COL_TYPE_TEXT, false),
             new Column("endTime", Column.COL_TYPE_TEXT, false),
@@ -64,7 +66,7 @@ public class Database extends SQLiteOpenHelper {
     public Table classes;
 
     // Increment upon schema change to DB:
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
 
     public static final String DATABASE_NAME = "Timetable.db";
 
@@ -89,9 +91,11 @@ public class Database extends SQLiteOpenHelper {
             people.makeTable();
         if(events != null)
             events.makeTable();
+        if(userEvents != null)
+            userEvents.makeTable();
         if(classList != null)
             classList.makeTable();
-        if(classList != null)
+        if(classes != null)
             classes.makeTable();
     }
 
@@ -107,6 +111,8 @@ public class Database extends SQLiteOpenHelper {
             people.deleteTable();
         if(events != null)
             events.deleteTable();
+        if(userEvents != null)
+            userEvents.makeTable();
         if(classList != null)
             classList.deleteTable();
         if(classes != null)
@@ -116,7 +122,7 @@ public class Database extends SQLiteOpenHelper {
     // ----------------------------------- Queries -------------------------------------------- //
 
     public ArrayList<Event> getEventList() {
-        /*
+
         String[] projection = {
                 TABLE_CLASS_LIST + "." + COL_CLASS_LIST[1].getColumnName(),
                 TABLE_CLASS_LIST + "." + COL_CLASS_LIST[2].getColumnName(),
@@ -159,13 +165,15 @@ public class Database extends SQLiteOpenHelper {
 
         while(cursorOK) {
             // populate events list
-            int id, classID, teacherID;
+            int id, classID, teacherID, studentID;
             String day, start, end, room, campus;
 
             String courseName, courseCode;
 
             courseName = c.getString(2);
             courseCode = c.getString(3);
+
+            studentID = c.getInt(1);
 
             id = c.getInt(4);
             classID = c.getInt(5);
@@ -177,11 +185,13 @@ public class Database extends SQLiteOpenHelper {
             campus = c.getString(11);
 
             Event event = new Event(id, classID, teacherID, day, start, end, room, campus, courseName, courseCode);
-            events.add(event);
+
+            if(studentID == MainActivity.userID)
+                events.add(event);
 
             cursorOK = c.moveToNext();
         }
-        */
+
 
         return null;
     }

@@ -19,10 +19,14 @@ public class Table {
     }
 
     public void makeTable() {
-        String sql = "CREATE TABLE '" + tableName + "' (";
+        String sql = "CREATE TABLE " + tableName + " (";
 
-        for (Column column : columns)
-            sql += column.getColumnDefinition() + ",";
+        for (int i = 0; i < columns.length; i++) {
+            sql += columns[i].getColumnDefinition();
+
+            if(i != columns.length-1)
+                sql += ",";
+        }
 
         sql += ")";
 

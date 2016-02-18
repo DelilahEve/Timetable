@@ -8,17 +8,17 @@ import android.view.View;
 
 import ca.delilaheve.timetable.R;
 
-public class AddCourseDialog {
+public class AddUserDialog {
 
     private AlertDialog.Builder builder;
 
-    public AddCourseDialog(Context context) {
+    public AddUserDialog(Context context) {
         builder = new AlertDialog.Builder(context);
 
-        builder.setTitle("Add Course");
+        builder.setTitle("Add User");
 
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.dialog_add_course, null, false);
+        LayoutInflater inflater  = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.dialog_add_user, null, false);
 
         // Do stuff here
 
@@ -27,7 +27,7 @@ public class AddCourseDialog {
         builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                saveCourse();
+                saveUser();
             }
         });
 
@@ -38,8 +38,8 @@ public class AddCourseDialog {
         builder.create().show();
     }
 
-    private void saveCourse() {
-        // Save course to db
+    private void saveUser() {
+        // Save user to db
     }
 
 }

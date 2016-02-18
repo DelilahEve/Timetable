@@ -15,6 +15,8 @@ import android.widget.TextView;
 import ca.delilaheve.timetable.MainActivity;
 import ca.delilaheve.timetable.R;
 import ca.delilaheve.timetable.adapter.SimpleAdapter;
+import ca.delilaheve.timetable.dialog.AddCourseDialog;
+import ca.delilaheve.timetable.dialog.AddUserDialog;
 
 public class SettingsFragment extends Fragment {
 
@@ -101,7 +103,7 @@ public class SettingsFragment extends Fragment {
         addCourse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Add a course
+                new AddCourseDialog(getActivity()).show();
             }
         });
 
@@ -109,7 +111,7 @@ public class SettingsFragment extends Fragment {
         addUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Add a user
+                new AddUserDialog(getActivity()).show();
             }
         });
 
@@ -144,13 +146,5 @@ public class SettingsFragment extends Fragment {
         editor.putBoolean(KEY_SERVER, server);
 
         editor.commit();
-    }
-
-    private void addCourse() {
-        // Build Course dialog
-    }
-
-    private void addUser() {
-        // Build User Dialog
     }
 }

@@ -1,5 +1,6 @@
 package ca.delilaheve.timetable;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -11,22 +12,35 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 
 import ca.delilaheve.timetable.dialog.AddEventDialog;
 import ca.delilaheve.timetable.fragment.DayViewFragment;
 import ca.delilaheve.timetable.fragment.NavDrawerFragment;
+import ca.delilaheve.timetable.fragment.PasswordFragment;
 import ca.delilaheve.timetable.fragment.SettingsFragment;
 import ca.delilaheve.timetable.fragment.WeekViewFragment;
 
 public class MainActivity extends AppCompatActivity {
+
+    private String ACCOUNT_ADMIN = "Admin";
+    private String PASS_ADMIN = "admin";
+
+    public static int userID = -1;
 
     public static final int MODE_DAY = 0;
     public static final int MODE_WEEK = 1;
 
     private WeekViewFragment weekFragment;
     private DayViewFragment dayFragment;
+    private PasswordFragment passwordFragment;
 
     private DrawerLayout drawer;
+
+    private Toolbar toolbar;
+
+    private Boolean unlocked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Set toolbar as Action bar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Set Drawer toggle
@@ -51,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         weekFragment = new WeekViewFragment();
         dayFragment = new DayViewFragment();
+        passwordFragment = new PasswordFragment();
 
         // Check Preferences
         SharedPreferences preferences = getSharedPreferences(SettingsFragment.prefsFile, 0);
@@ -68,6 +83,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         transaction.commit();
+
+        if(!unlocked)
+            manager.beginTransaction().add(R.id.passwordFrame, passwordFragment, "password").commit();
     }
 
     @Override
@@ -119,7 +137,31 @@ public class MainActivity extends AppCompatActivity {
         drawer.closeDrawer(GravityCompat.START);
     }
 
-    private void addUserEvent() {
-        // Add a user event
+    public void login(String username, String password) {
+        if(username.equals(ACCOUNT_ADMIN) && password.equals(PASS_ADMIN)) {
+            unlock();
+            return;
+        }
+
+        // Check if login is in db
+        // if is present, set userID
+        // then allow unlock
+    }
+
+    private void unlock() {
+        // Hide Password fragment
+        getSupportFragmentManager().beginTransaction().remove(passwordFragment).commit();
+
+        // Hide keyboard
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(findViewById(R.id.contentFrame).getWindowToken(), 0);
+
+        // hide password FrameLayout
+        DrawerLayout layout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        FrameLayout passFrame = (FrameLayout) findViewById(R.id.passwordFrame);
+        layout.removeView(passFrame);
+
+        // set state to unlocked
+        unlocked = true;
     }
 }
