@@ -14,15 +14,10 @@
         android:id="@+id/dayOfWeek"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Location"/>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -42,6 +37,10 @@
             android:editable="false"
             android:focusable="false"/>
     </LinearLayout>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Location"/>
     <EditText
         android:inputType="textMultiLine"
         android:layout_width="match_parent"
