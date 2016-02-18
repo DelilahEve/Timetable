@@ -22,7 +22,7 @@ public class ViewEventFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.dialog_event_viewer, container, false);
+        view = inflater.inflate(R.layout.fragment_event_view, container, false);
 
         // Do stuff to view here
 

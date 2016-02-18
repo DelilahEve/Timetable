@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import ca.delilaheve.timetable.R;
@@ -68,7 +67,7 @@ public class WeekViewFragment extends Fragment {
                 params.columnSpec = GridLayout.spec(column);
 
                 // add view to grid
-                View v = inflater.inflate(R.layout.dialog_calendar_itemview, container, false);
+                View v = inflater.inflate(R.layout.item_calendar, container, false);
                 v.setLayoutParams(params);
                 calendar.addView(v);
 

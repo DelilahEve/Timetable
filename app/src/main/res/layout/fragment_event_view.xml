@@ -8,15 +8,15 @@
     android:padding="12dp">
 
     <TextView
-        android:hint="Event Name"
+        android:text="Event Name"
         android:id="@+id/eventName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:textStyle="bold"/>
-
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
     <TextView
-        android:hint="Date"
+        android:text="Date"
         android:id="@+id/date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,42 +27,36 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
         <TextView
-            android:hint="Start Time"
+            android:text="Start Time"
             android:id="@+id/startTime"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"/>
-
         <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1"/>
-
         <TextView
-            android:hint="End Time"
+            android:text="End Time"
             android:id="@+id/endTime"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="2"/>
-
     </LinearLayout>
-
     <TextView
-        android:hint="Location"
+        android:text="Location"
         android:id="@+id/location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:textSize="18sp"
         android:textStyle="bold"/>
-
     <TextView
         android:hint="Event Description"
         android:id="@+id/eventDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
 </LinearLayout>

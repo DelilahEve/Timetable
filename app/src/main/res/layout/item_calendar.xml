@@ -7,7 +7,7 @@
     android:padding="5dp">
 
     <TextView
-        android:hint="Event Name"
+        android:text="Event Name"
         android:id="@+id/eventName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,25 +15,25 @@
         android:textStyle="bold"
         android:textAlignment="center"/>
     <TextView
-        android:hint="Start Time"
+        android:text="Start Time"
         android:id="@+id/startTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:textAlignment="center"/>
     <TextView
-        android:hint="to"
+        android:text="to"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"/>
     <TextView
-        android:hint="End Time"
+        android:text="End Time"
         android:id="@+id/endTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"/>
     <TextView
-        android:hint="Location"
+        android:text="Location"
         android:id="@+id/location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -67,7 +67,7 @@ public class DayViewFragment extends Fragment {
                 params.rowSpec = GridLayout.spec(rowStart, rowSpan);
 
                 // add view to grid
-                View v = inflater.inflate(R.layout.dialog_calendar_itemview, container, false);
+                View v = inflater.inflate(R.layout.item_calendar, container, false);
                 v.setLayoutParams(params);
                 calendar.addView(v);
 
