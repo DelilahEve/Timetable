@@ -19,7 +19,6 @@
             android:layout_margin="5dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:checked="true"
             android:text="M" />
 
         <CheckBox
@@ -29,7 +28,6 @@
             android:layout_margin="5dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:checked="true"
             android:text="T" />
 
         <CheckBox
@@ -39,7 +37,6 @@
             android:layout_margin="5dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:checked="true"
             android:text="W" />
 
         <CheckBox
@@ -49,7 +46,6 @@
             android:layout_margin="5dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:checked="true"
             android:text="Th" />
 
         <CheckBox
@@ -59,7 +55,6 @@
             android:layout_margin="5dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:checked="true"
             android:text="F" />
 
     </LinearLayout>

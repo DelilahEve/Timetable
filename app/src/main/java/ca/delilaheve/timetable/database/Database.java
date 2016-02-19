@@ -1,6 +1,7 @@
 package ca.delilaheve.timetable.database;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -26,7 +27,7 @@ public class Database extends SQLiteOpenHelper {
     public static final Column[] COL_EVENTS = {
             new Column("_id", Column.COL_TYPE_INT, true),
             new Column("courseID", Column.COL_TYPE_INT, false),
-            new Column("teacherID", Column.COL_TYPE_INT, false),
+            new Column("teacherName", Column.COL_TYPE_TEXT, false),
             new Column("day", Column.COL_TYPE_TEXT, false),
             new Column("startTime", Column.COL_TYPE_TEXT, false),
             new Column("endTime", Column.COL_TYPE_TEXT, false),
@@ -68,7 +69,7 @@ public class Database extends SQLiteOpenHelper {
     public Table classes;
 
     // Increment upon schema change to DB:
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 5;
 
     public static final String DATABASE_NAME = "Timetable.db";
 
@@ -85,6 +86,8 @@ public class Database extends SQLiteOpenHelper {
         classList = new Table(TABLE_CLASS_LIST, COL_CLASS_LIST, db);
         classes = new Table(TABLE_CLASSES, COL_CLASSES, db);
 
+        // uncomment if database refuses to re-create
+//        deleteDatabase(db);
         onCreate(db);
     }
 
@@ -127,18 +130,14 @@ public class Database extends SQLiteOpenHelper {
     public ArrayList<Event> getEventList() {
 
         String[] projection = {
-                TABLE_CLASS_LIST + "." + COL_CLASS_LIST[1].getColumnName(),
-                TABLE_CLASS_LIST + "." + COL_CLASS_LIST[2].getColumnName(),
-                TABLE_CLASSES + "." + COL_CLASSES[1].getColumnName(),
-                TABLE_CLASSES + "." + COL_CLASSES[2].getColumnName(),
-                TABLE_EVENTS + "." + COL_EVENTS[0].getColumnName(),
-                TABLE_EVENTS + "." + COL_EVENTS[1].getColumnName(),
-                TABLE_EVENTS + "." + COL_EVENTS[2].getColumnName(),
-                TABLE_EVENTS + "." + COL_EVENTS[3].getColumnName(),
-                TABLE_EVENTS + "." + COL_EVENTS[4].getColumnName(),
-                TABLE_EVENTS + "." + COL_EVENTS[5].getColumnName(),
-                TABLE_EVENTS + "." + COL_EVENTS[6].getColumnName(),
-                TABLE_EVENTS + "." + COL_EVENTS[7].getColumnName()
+                COL_EVENTS[0].getColumnName(),
+                COL_EVENTS[1].getColumnName(),
+                COL_EVENTS[2].getColumnName(),
+                COL_EVENTS[3].getColumnName(),
+                COL_EVENTS[4].getColumnName(),
+                COL_EVENTS[5].getColumnName(),
+                COL_EVENTS[6].getColumnName(),
+                COL_EVENTS[7].getColumnName()
         };
 
         String query = "SELECT ";
@@ -150,15 +149,7 @@ public class Database extends SQLiteOpenHelper {
                 query += ",";
         }
 
-        query += " FROM " + TABLE_CLASS_LIST
-                + " INNER JOIN " + TABLE_EVENTS + " ON "
-                + TABLE_CLASS_LIST + "." + COL_CLASS_LIST[2].getColumnName()
-                + "="
-                + TABLE_EVENTS + "." + COL_EVENTS[1].getColumnName()
-                + " INNER JOIN " + TABLE_CLASSES + " ON "
-                + TABLE_CLASS_LIST + "." + COL_CLASS_LIST[2].getColumnName()
-                + "="
-                + TABLE_CLASSES + "." + COL_CLASSES[0].getColumnName();
+        query += " FROM " + TABLE_EVENTS;
 
         ArrayList<Event> events = new ArrayList<>();
 
@@ -166,31 +157,36 @@ public class Database extends SQLiteOpenHelper {
 
         boolean cursorOK = c.moveToFirst();
 
+        ArrayList<Course> courseList = getAllCourses();
+        ArrayList<Integer> courses = getClasses();
+
         while(cursorOK) {
             // populate events list
-            int id, classID, teacherID, studentID;
-            String day, start, end, room, campus;
+            int id, courseID;
+            String day, start, end, room, campus, teacher;
 
-            String courseName, courseCode;
+            String courseName = null, courseCode = null;
 
-            courseName = c.getString(2);
-            courseCode = c.getString(3);
+            id = c.getInt(0);
+            courseID = c.getInt(1);
+            teacher = c.getString(2);
+            day = c.getString(3);
+            start = c.getString(4);
+            end = c.getString(5);
+            room = c.getString(6);
+            campus = c.getString(7);
 
-            studentID = c.getInt(1);
+            for(Course item : courseList) {
+                if(item.getId() == courseID) {
+                    courseName = item.getCourseName();
+                    courseCode = item.getCourseCode();
+                }
+            }
 
-            id = c.getInt(4);
-            classID = c.getInt(5);
-            teacherID = c.getInt(6);
-            day = c.getString(7);
-            start = c.getString(8);
-            end = c.getString(9);
-            room = c.getString(10);
-            campus = c.getString(11);
-
-            Event event = new Event(id, classID, teacherID, day, start, end, room, campus, courseName, courseCode);
-
-            if(studentID == MainActivity.userID)
+            if(courseName != null && courseCode != null && courses.contains(courseID)) {
+                Event event = new Event(id, courseID, teacher, day, start, end, room, campus, courseName, courseCode);
                 events.add(event);
+            }
 
             cursorOK = c.moveToNext();
         }
@@ -225,7 +221,6 @@ public class Database extends SQLiteOpenHelper {
 
         while (cursorOK) {
 
-            // create and add course
             int id;
             String courseName, courseCode;
 
@@ -287,5 +282,42 @@ public class Database extends SQLiteOpenHelper {
         }
 
         return users;
+    }
+
+    public ArrayList<Integer> getClasses() {
+        String[] projection = {
+                COL_CLASS_LIST[1].getColumnName(),
+                COL_CLASS_LIST[2].getColumnName()
+        };
+
+        String query = "SELECT ";
+
+        for(int i = 0; i < projection.length; i++) {
+            query += projection[i];
+
+            if(i != projection.length-1)
+                query += ",";
+        }
+
+        query += " FROM " + TABLE_CLASS_LIST;
+
+        Cursor c = db.rawQuery(query, null);
+
+        boolean cursorOK = c.moveToFirst();
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        while (cursorOK) {
+            int courseID, studentID;
+            courseID = c.getInt(0);
+            studentID = c.getInt(1);
+
+            if(studentID == MainActivity.userID)
+                ids.add(courseID);
+
+            cursorOK = c.moveToNext();
+        }
+
+        return ids;
     }
 }

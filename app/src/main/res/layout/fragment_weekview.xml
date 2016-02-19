@@ -176,7 +176,7 @@
             </TableRow>
 
             <TableRow
-                android:layout_weight="1">
+                android:layout_weight="1" >
 
                 <TextView
                     android:paddingLeft="12dp"
@@ -192,10 +192,12 @@
         <GridLayout
             android:id="@+id/calendarItems"
             android:layout_weight="1"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:rowCount="44"
             android:columnCount="5"
-            android:layout_span="5" />
+            android:layout_span="5" >
+
+        </GridLayout>
 
     </TableRow>
 

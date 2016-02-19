@@ -3,6 +3,7 @@ package ca.delilaheve.timetable;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +16,10 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 
+import java.util.ArrayList;
+
+import ca.delilaheve.timetable.data.User;
+import ca.delilaheve.timetable.database.Database;
 import ca.delilaheve.timetable.dialog.AddEventDialog;
 import ca.delilaheve.timetable.fragment.DayViewFragment;
 import ca.delilaheve.timetable.fragment.NavDrawerFragment;
@@ -23,6 +28,8 @@ import ca.delilaheve.timetable.fragment.SettingsFragment;
 import ca.delilaheve.timetable.fragment.WeekFragment;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static Boolean debug = false;
 
     private String ACCOUNT_ADMIN = "Admin";
     private String PASS_ADMIN = "admin";
@@ -89,6 +96,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        if(debug)
+            unlock();
+    }
+
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -122,9 +137,11 @@ public class MainActivity extends AppCompatActivity {
         switch (viewMode) {
             case MODE_DAY:
                 manager.beginTransaction().replace(R.id.contentFrame, dayFragment).commit();
+                //dayFragment.update();
                 break;
             case MODE_WEEK:
                 manager.beginTransaction().replace(R.id.contentFrame, weekFragment).commit();
+                //weekFragment.update();
                 break;
         }
     }
@@ -143,9 +160,14 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // Check if login is in db
-        // if is present, set userID
-        // then allow unlock
+        Database db = new Database(this);
+        ArrayList<User> users = db.getAllUsers();
+
+        for(User user : users)
+            if(user.getName().equals(username) && user.getPassword().equals(password)) {
+                userID = user.getId();
+                unlock();
+            }
     }
 
     private void unlock() {
@@ -163,5 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
         // set state to unlocked
         unlocked = true;
+
+        weekFragment.update();
     }
 }

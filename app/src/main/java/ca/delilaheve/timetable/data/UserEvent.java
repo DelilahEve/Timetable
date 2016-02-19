@@ -1,4 +1,4 @@
 package ca.delilaheve.timetable.data;
 
-public class ClassEvent {
+public class UserEvent {
 }

@@ -9,12 +9,22 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:textColor="#222"
         android:textStyle="bold"
         android:text="Repeat"/>
 
-    <include layout="@layout/tool_day_picker"/>
+    <include
+        layout="@layout/tool_day_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/teacher"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Teacher"
+        android:layout_marginBottom="8dp"/>
 
     <LinearLayout
         android:orientation="horizontal"

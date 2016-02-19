@@ -10,17 +10,17 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import ca.delilaheve.timetable.R;
-import ca.delilaheve.timetable.data.Course;
+import ca.delilaheve.timetable.data.Event;
 
-public class CourseListAdapter extends BaseAdapter {
+public class ClassEventListAdapter extends BaseAdapter {
 
     private LayoutInflater inflater;
 
-    private ArrayList<Course> courses;
+    private ArrayList<Event> classEvents;
 
-    public CourseListAdapter(Context context, ArrayList<Course> courses) {
+    public ClassEventListAdapter(Context context, ArrayList<Event> classEvents) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.courses = courses;
+        this.classEvents = classEvents;
     }
 
     @Override
@@ -28,15 +28,16 @@ public class CourseListAdapter extends BaseAdapter {
         View view = inflater.inflate(R.layout.item_simple, parent, false);
 
         TextView itemText = (TextView) view.findViewById(R.id.itemText);
-        String text = courses.get(position).getCourseName() + " - " + courses.get(position).getCourseCode();
+        Event event = classEvents.get(position);
+        String text = event.getStartTime() + " - " + event.getEndTime() + " on " + event.getDay();
         itemText.setText(text);
 
         return view;
     }
 
     @Override
-    public Course getItem(int position) {
-        return courses.get(position);
+    public Event getItem(int position) {
+        return classEvents.get(position);
     }
 
     @Override
@@ -46,11 +47,19 @@ public class CourseListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return courses.size();
+        return classEvents.size();
     }
 
-    public void addItem(Course course) {
-        courses.add(course);
+    public void addItem(Event event) {
+        classEvents.add(event);
         notifyDataSetChanged();
+    }
+
+    public boolean hasItem(Event event) {
+        for(Event e : classEvents)
+            if(event.getDay().equals(e.getDay()) && event.getRoom().equals(e.getRoom()))
+                return true;
+
+        return false;
     }
 }

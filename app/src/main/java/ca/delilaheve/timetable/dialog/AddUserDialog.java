@@ -1,22 +1,26 @@
 package ca.delilaheve.timetable.dialog;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import ca.delilaheve.timetable.R;
 import ca.delilaheve.timetable.adapter.CourseListAdapter;
 import ca.delilaheve.timetable.adapter.SimpleAdapter;
 import ca.delilaheve.timetable.data.*;
+import ca.delilaheve.timetable.database.Column;
 import ca.delilaheve.timetable.database.Database;
+import ca.delilaheve.timetable.database.Table;
 
 public class AddUserDialog {
 
@@ -27,6 +31,13 @@ public class AddUserDialog {
     private ArrayList<Course> addedCourses;
 
     private CourseListAdapter courseListAdapter;
+
+    private Spinner accountType;
+    private ListView courseList;
+    private TextView addCourseButton;
+    private EditText firstName;
+    private EditText lastName;
+    private EditText password;
 
     public AddUserDialog(Context context) {
         addedCourses = new ArrayList<>();
@@ -40,12 +51,18 @@ public class AddUserDialog {
         View view = inflater.inflate(R.layout.dialog_add_user, null, false);
 
         // Do stuff here
-        Spinner accountType = (Spinner) view.findViewById(R.id.accountType);
-        ListView courseList = (ListView) view.findViewById(R.id.courseList);
-        final TextView addCourseButton = (TextView) view.findViewById(R.id.addCourseButton);
+        accountType = (Spinner) view.findViewById(R.id.accountType);
+        courseList = (ListView) view.findViewById(R.id.courseList);
+        addCourseButton = (TextView) view.findViewById(R.id.addCourseButton);
+        firstName = (EditText) view.findViewById(R.id.firstName);
+        lastName = (EditText) view.findViewById(R.id.lastName);
+        password = (EditText) view.findViewById(R.id.password);
 
         SimpleAdapter adapter = new SimpleAdapter(context, R.array.account_types);
         accountType.setAdapter(adapter);
+
+        courseListAdapter = new CourseListAdapter(context, new ArrayList<Course>());
+        courseList.setAdapter(courseListAdapter);
 
         addCourseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +88,48 @@ public class AddUserDialog {
     }
 
     private void saveUser() {
-        // Save user to db
+        String name, pass, account;
+
+        String first, last;
+        first = firstName.getText().toString();
+        last = lastName.getText().toString();
+
+        name = first + " " + last;
+
+        pass = password.getText().toString();
+
+        account = accountType.getSelectedItem().toString();
+
+        if(first.equals("") || last.equals("") || pass.equals("")) {
+            Toast.makeText(context, "Failed to save user", Toast.LENGTH_SHORT).show();
+        }
+
+        Database db = new Database(context);
+        // Add people data
+
+        Column[] peopleCol = Database.COL_PEOPLE;
+
+        ContentValues values = new ContentValues();
+
+        values.put(peopleCol[1].getColumnName(), name);
+        values.put(peopleCol[2].getColumnName(), pass);
+        values.put(peopleCol[3].getColumnName(), account);
+
+        Table people = db.people;
+        int peopleID = (int) people.add(values);
+
+        // Add course list data
+        Column[] courseListCol = Database.COL_CLASS_LIST;
+        Table courseList = db.classList;
+
+        for (Course course : addedCourses) {
+            ContentValues v = new ContentValues();
+
+            v.put(courseListCol[1].getColumnName(), course.getId());
+            v.put(courseListCol[2].getColumnName(), peopleID);
+
+            courseList.add(v);
+        }
     }
 
     private void addCourse() {
@@ -90,7 +148,9 @@ public class AddUserDialog {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Course course = courses.get(which);
-                addedCourses.add(course);
+                courseListAdapter.addItem(course);
+                if(!addedCourses.contains(course))
+                    addedCourses.add(course);
                 dialog.dismiss();
             }
         });

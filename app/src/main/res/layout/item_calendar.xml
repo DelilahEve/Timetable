@@ -1,42 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp">
+    android:padding="5dp"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true" >
 
     <TextView
-        android:text="Event Name"
         android:id="@+id/eventName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
         android:textStyle="bold"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:text="Event Name"/>
+
     <TextView
-        android:text="Start Time"
-        android:id="@+id/startTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:textAlignment="center"/>
-    <TextView
-        android:text="to"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"/>
-    <TextView
-        android:text="End Time"
-        android:id="@+id/endTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"/>
-    <TextView
-        android:text="Location"
         android:id="@+id/location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:text="Location"/>
 </LinearLayout>

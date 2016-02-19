@@ -35,7 +35,6 @@ public class Table {
             db.execSQL(sql);
         } catch (SQLException e) {
             // error because Table already exists, ignore
-            e.printStackTrace();
         }
     }
 
@@ -44,8 +43,8 @@ public class Table {
         db.execSQL(sql);
     }
 
-    public void add(ContentValues values) {
-        db.insert(tableName, null, values);
+    public long add(ContentValues values) {
+        return db.insert(tableName, null, values);
     }
 
     public void update(ContentValues values, int rowID) {

@@ -40,8 +40,11 @@ public class SettingsFragment extends Fragment {
     private Switch serverToggle;
     private EditText notifyTime;
     private Spinner muteMode;
+
     private TextView addCourse;
+    private TextView editCourse;
     private TextView addUser;
+    private TextView editUser;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,7 +63,9 @@ public class SettingsFragment extends Fragment {
         muteMode = (Spinner) view.findViewById(R.id.muteSpinner);
 
         addCourse = (TextView) view.findViewById(R.id.addCourse);
+        editCourse = (TextView) view.findViewById(R.id.editCourse);
         addUser = (TextView) view.findViewById(R.id.addUser);
+        editUser = (TextView) view.findViewById(R.id.editUser);
 
         int defaultViewMode, notificationStart, mute;
         boolean notify, automute, server;
@@ -107,11 +112,25 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        editCourse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Edit Course
+            }
+        });
+
         // Add User Button
         addUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new AddUserDialog(getActivity()).show();
+            }
+        });
+
+        editUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Edit user
             }
         });
 

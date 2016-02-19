@@ -6,7 +6,8 @@ public class Event implements Serializable {
 
     private int id;
     private int classID;
-    private int teacherID;
+
+    private String teacher;
 
     private String className;
     private String courseCode;
@@ -18,10 +19,10 @@ public class Event implements Serializable {
     private String room;
     private String campus;
 
-    public Event(int id, int classID, int teacherID, String day, String startTime, String endTime, String room, String campus, String className, String courseCode) {
+    public Event(int id, int classID, String teacher, String day, String startTime, String endTime, String room, String campus, String className, String courseCode) {
         this.id = id;
         this.classID = classID;
-        this.teacherID = teacherID;
+        this.teacher = teacher;
         this.day = day;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -40,8 +41,8 @@ public class Event implements Serializable {
         return classID;
     }
 
-    public int getTeacherID() {
-        return teacherID;
+    public String getTeacher() {
+        return teacher;
     }
 
     public String getDay() {
