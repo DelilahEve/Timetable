@@ -1,6 +1,7 @@
 package ca.delilaheve.timetable.database;
 
 import android.content.ContentValues;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 public class Table {
@@ -19,18 +20,23 @@ public class Table {
     }
 
     public void makeTable() {
-        String sql = "CREATE TABLE " + tableName + " (";
+        try {
+            String sql = "CREATE TABLE " + tableName + " (";
 
-        for (int i = 0; i < columns.length; i++) {
-            sql += columns[i].getColumnDefinition();
+            for (int i = 0; i < columns.length; i++) {
+                sql += columns[i].getColumnDefinition();
 
-            if(i != columns.length-1)
-                sql += ",";
+                if(i != columns.length-1)
+                    sql += ",";
+            }
+
+            sql += ")";
+
+            db.execSQL(sql);
+        } catch (SQLException e) {
+            // error because Table already exists, ignore
+            e.printStackTrace();
         }
-
-        sql += ")";
-
-        db.execSQL(sql);
     }
 
     public void deleteTable() {

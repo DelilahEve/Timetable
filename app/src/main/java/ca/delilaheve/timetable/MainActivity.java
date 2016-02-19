@@ -20,7 +20,7 @@ import ca.delilaheve.timetable.fragment.DayViewFragment;
 import ca.delilaheve.timetable.fragment.NavDrawerFragment;
 import ca.delilaheve.timetable.fragment.PasswordFragment;
 import ca.delilaheve.timetable.fragment.SettingsFragment;
-import ca.delilaheve.timetable.fragment.WeekViewFragment;
+import ca.delilaheve.timetable.fragment.WeekFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int MODE_DAY = 0;
     public static final int MODE_WEEK = 1;
 
-    private WeekViewFragment weekFragment;
+    private WeekFragment weekFragment;
     private DayViewFragment dayFragment;
     private PasswordFragment passwordFragment;
 
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         // Add Nav drawer
         manager.beginTransaction().replace(R.id.leftDrawer, new NavDrawerFragment()).commit();
 
-        weekFragment = new WeekViewFragment();
+        weekFragment = new WeekFragment();
         dayFragment = new DayViewFragment();
         passwordFragment = new PasswordFragment();
 

@@ -13,15 +13,13 @@ import ca.delilaheve.timetable.R;
 import ca.delilaheve.timetable.data.Event;
 import ca.delilaheve.timetable.database.Database;
 
-public class WeekViewFragment extends Fragment {
+public class WeekFragment extends Fragment {
 
     private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_weekview, container, false);
-
-
 
         GridLayout calendar = (GridLayout) view.findViewById(R.id.calendarItems);
 

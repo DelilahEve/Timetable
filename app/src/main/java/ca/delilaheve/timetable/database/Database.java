@@ -8,7 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 
 import ca.delilaheve.timetable.MainActivity;
+import ca.delilaheve.timetable.data.Course;
 import ca.delilaheve.timetable.data.Event;
+import ca.delilaheve.timetable.data.User;
 
 public class Database extends SQLiteOpenHelper {
 
@@ -83,6 +85,7 @@ public class Database extends SQLiteOpenHelper {
         classList = new Table(TABLE_CLASS_LIST, COL_CLASS_LIST, db);
         classes = new Table(TABLE_CLASSES, COL_CLASSES, db);
 
+        onCreate(db);
     }
 
     @Override
@@ -191,9 +194,98 @@ public class Database extends SQLiteOpenHelper {
 
             cursorOK = c.moveToNext();
         }
+        c.close();
 
-
-        return null;
+        return events;
     }
 
+    public ArrayList<Course> getAllCourses() {
+        String[] projection = {
+                COL_CLASSES[0].getColumnName(),
+                COL_CLASSES[1].getColumnName(),
+                COL_CLASSES[2].getColumnName()
+        };
+
+        String query = "SELECT ";
+
+        for(int i = 0; i < projection.length; i++) {
+            query += projection[i];
+
+            if(i != projection.length-1)
+                query += ",";
+        }
+
+        query += " FROM " + TABLE_CLASSES;
+
+        Cursor c = db.rawQuery(query, null);
+
+        ArrayList<Course> courses = new ArrayList<>();
+
+        boolean cursorOK = c.moveToFirst();
+
+        while (cursorOK) {
+
+            // create and add course
+            int id;
+            String courseName, courseCode;
+
+            id = c.getInt(0);
+            courseName = c.getString(1);
+            courseCode = c.getString(2);
+
+            Course course = new Course(id, courseName, courseCode);
+
+            courses.add(course);
+
+            cursorOK = c.moveToNext();
+        }
+
+        return courses;
+    }
+
+    public ArrayList<User> getAllUsers() {
+        String[] projection = {
+                COL_PEOPLE[0].getColumnName(),
+                COL_PEOPLE[1].getColumnName(),
+                COL_PEOPLE[2].getColumnName(),
+                COL_PEOPLE[3].getColumnName()
+        };
+
+        String query = "SELECT ";
+
+        for(int i = 0; i < projection.length; i++) {
+            query += projection[i];
+
+            if(i != projection.length-1)
+                query += ",";
+        }
+
+        query += " FROM " + TABLE_PEOPLE;
+
+        Cursor c = db.rawQuery(query, null);
+
+        ArrayList<User> users = new ArrayList<>();
+
+        boolean cursorOK = c.moveToFirst();
+
+        while (cursorOK) {
+
+            // create and add course
+            int id;
+            String name, password, accountType;
+
+            id = c.getInt(0);
+            name = c.getString(1);
+            password = c.getString(2);
+            accountType = c.getString(3);
+
+            User user = new User(id, name, password, accountType);
+
+            users.add(user);
+
+            cursorOK = c.moveToNext();
+        }
+
+        return users;
+    }
 }

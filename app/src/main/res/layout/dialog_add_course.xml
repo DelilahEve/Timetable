@@ -5,29 +5,46 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="12dp">
+    android:padding="12dp" >
+
     <EditText
         android:id="@+id/courseName"
         android:hint="Course Name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"/>
+
     <EditText
         android:id="@+id/courseCode"
         android:hint="Course Code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#222"
+        android:textStyle="bold"
+        android:text="Class Times"/>
+
     <ListView
         android:id="@+id/classList"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="200dp"
         android:layout_marginBottom="8dp"/>
+
     <TextView
-        android:text="Add Class"
-        android:textSize="20sp"
+        android:id="@+id/addClassButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableRight="@drawable/ic_action_content_add"/>
+        android:gravity="center_vertical"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:textColor="#222"
+        android:text="Add Class"
+        android:drawableRight="@drawable/ic_action_add"
+        android:clickable="true"
+        android:background="?attr/selectableItemBackground"/>
 
 </LinearLayout>
