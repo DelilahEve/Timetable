@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static int userID = -1;
 
+    private static Boolean unlocked = false;
+
     public static final int MODE_DAY = 0;
     public static final int MODE_WEEK = 1;
 
@@ -39,8 +41,6 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawer;
 
     private Toolbar toolbar;
-
-    private Boolean unlocked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
