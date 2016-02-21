@@ -1,25 +1,24 @@
 package ca.delilaheve.timetable.fragment;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
-import android.widget.Space;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 
-import ca.delilaheve.timetable.EventActivity;
 import ca.delilaheve.timetable.R;
 import ca.delilaheve.timetable.data.Event;
 import ca.delilaheve.timetable.database.Database;
+import ca.delilaheve.timetable.view.CalendarLayout;
 
 public class DayViewFragment extends Fragment {
 
@@ -27,108 +26,154 @@ public class DayViewFragment extends Fragment {
 
     private LayoutInflater inflater;
 
+    private String currentDay;
+
+    private CalendarLayout calendar;
+
+    private boolean vtoComplete = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
         view = inflater.inflate(R.layout.fragment_day_view, container, false);
 
-        String currentDay = new SimpleDateFormat("EEEE").format(new Date());
+        currentDay = new SimpleDateFormat("EEEE", Locale.CANADA).format(new Date());
+
+        calendar = (CalendarLayout) view.findViewById(R.id.calendarItems);
 
         TextView day = (TextView) view.findViewById(R.id.day);
         day.setText(currentDay);
 
-        if(savedInstanceState == null)
-            update();
-
         return view;
     }
 
-    public void update() {int i = 0;
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        ViewTreeObserver vto = calendar.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (!vtoComplete) {
+                    update();
+                    vtoComplete = true;
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        update();
+    }
+
+    public void update() {
         if(view == null)
             return;
 
-        GridLayout calendar = (GridLayout) view.findViewById(R.id.calendarItems);
+        // Get calendar view
+        calendar.removeAllViews();
 
+        // get events list
         Database db = new Database(getActivity());
         ArrayList<Event> events = db.getEventList();
 
-        int rowCount = 44;
+        // set grid size (static for testing phase)
+        int cols = 1;
+        int rows = 40;
+        calendar.setGrid(rows, cols, calendar.getHeight(), calendar.getWidth());
 
-        for(int r = 0; r < rowCount && i <= events.size(); r++) {
-            GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            int rowEnd, rowSpan;
-            int eventStart;
+        setHeaders();
 
-            if(events.size() != 0 && i < events.size()) {
-                Event event = events.get(i);
-                eventStart = getRowFromTime(event.getStartTime());
+        // Sort events by day
+        Event[][] eventsGrid = sortEvents(events);
 
-                // Event begins further up, add padding
-                if(eventStart > r) {
-                    Space padBefore = new Space(getActivity());
+        // Iterate over events to add to calendar
+        for(int c = 0; c < cols; c++) {
+            // Iterate Columns
 
-                    rowSpan = eventStart - r;
+            Event[] day = eventsGrid[c];
 
-                    System.out.println("Start: " + event.getStartTime());
-                    System.out.println("Col: " + 0 + " | Row Start: " + r + " | Event Start: " + eventStart + " | Row Span: " + rowSpan);
+            for(Event e : day) {
+                // Iterate Rows
+                int rowStart, rowEnd, rowSpan;
 
-                    params.rowSpec = GridLayout.spec(r, rowSpan, GridLayout.FILL, 1f * rowSpan);
-                    params.columnSpec = GridLayout.spec(0);
-                    params.width = calendar.getWidth() / 5;
+                rowStart = getRowFromTime(e.getStartTime());
+                rowEnd = getRowFromTime(e.getEndTime());
 
-                    padBefore.setLayoutParams(params);
-                    calendar.addView(padBefore);
+                rowSpan = rowEnd - rowStart;
 
-                    r = eventStart;
-                }
+                View v = inflater.inflate(R.layout.item_calendar, calendar, false);
 
-                // Add Event here
-                View eventView = inflater.inflate(R.layout.item_calendar, null, false);
-                Random random = new Random();
-                eventView.setBackgroundColor(Color.argb(50, random.nextInt(255), random.nextInt(255), random.nextInt(255)));
+                // Modify View here
+                Random r = new Random(e.getClassID());
+                v.setBackgroundColor(Color.argb(50, r.nextInt(255), r.nextInt(255), r.nextInt(255)));
 
-                TextView eventName, eventLoc;
+                System.out.println("Event added in Day: " + e.getCourseCode());
+                System.out.println("Col: " + c + "  |  Start Row: " + rowStart + "  |  End Row: " + rowEnd + "  |  Row Span: " + rowSpan);
+                System.out.println();
 
-                eventName = (TextView) eventView.findViewById(R.id.eventName);
-                eventLoc = (TextView) eventView.findViewById(R.id.location);
+                TextView eventName, place;
+                eventName = (TextView) v.findViewById(R.id.eventName);
+                place = (TextView) v.findViewById(R.id.location);
 
-                eventName.setText(event.getCourseCode());
-                eventLoc.setText(event.getRoom());
+                eventName.setText(e.getCourseCode());
+                place.setText(e.getRoom());
 
-                setClick(eventView, event);
-
-                rowEnd = getRowFromTime(event.getEndTime());
-                rowSpan = rowEnd - r;
-
-                System.out.println("Col: " + 0 + " | Row Start: " + r + " | Row End: " + rowEnd + " | Row Span: " + rowSpan);
-
-                params.rowSpec = GridLayout.spec(r, rowSpan, GridLayout.FILL, 1f * rowSpan);
-                params.columnSpec = GridLayout.spec(0);
-                params.width = calendar.getWidth() / 5;
-
-                eventView.setLayoutParams(params);
-                calendar.addView(eventView);
-
-                i++;
-                r = rowEnd;
+                // Set click and add to calendar
+                setClick(v, e);
+                calendar.addChild(v, rowStart, rowSpan, c);
             }
-            else if(events.size() == 0 && r == 0) {
-                Space padBefore = new Space(getActivity());
 
-                System.out.println("Col: " + 0 + " | Row Start: " + r + " | Row Span: " + String.valueOf(rowCount-1));
-
-                params.rowSpec = GridLayout.spec(r, rowCount - 1, 1f * rowCount);
-                params.columnSpec = GridLayout.spec(0);
-                params.width = calendar.getWidth() / 5;
-
-                padBefore.setLayoutParams(params);
-                calendar.addView(padBefore);
-
-                r = rowCount;
-            }
         }
+    }
 
-        calendar.invalidate();
+    private void setHeaders() {
+        String[] times = {
+                "8","9","10","11","12","1","2","3","4","5"
+        };
+
+        String p = "AM";
+
+        System.out.println("Day Headers:");
+
+        for(int i = 0; i < times.length; i++) {
+            int rowStart, rowSpan = 4;
+
+            if(Integer.parseInt(times[i]) == 12)
+                p = "PM";
+
+            String t = times[i] + ":00 " + p;
+
+            rowStart = getRowFromTime(t);
+
+            View h = inflater.inflate(R.layout.item_calendar_header, calendar, false);
+
+            TextView itemText = (TextView) h.findViewById(R.id.itemText);
+            itemText.setText(times[i] + " " + p);
+
+            int c = Color.argb(80, 200, 200, 200);
+            if(rowStart % 4 == 0 && rowStart % 8 != 0)
+                c = Color.argb(190, 200, 200, 200);
+
+            h.setBackgroundColor(c);
+
+            System.out.println("Start Row: " + rowStart + "  |  Row Span: " + rowSpan);
+
+            calendar.addHeader(h, rowStart, rowSpan, true);
+        }
+    }
+
+
+    public void setClick(View v, Event event) {
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Go to view event
+            }
+        });
     }
 
     private int getRowFromTime(String time) {
@@ -152,14 +197,41 @@ public class DayViewFragment extends Fragment {
         return row;
     }
 
-    public void setClick(View v, final Event event) {
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getActivity(), EventActivity.class);
-                i.putExtra("event", event);
-                startActivity(i);
+    private Event[][] sortEvents(ArrayList<Event> events) {
+        ArrayList<Event> monday, tuesday, wednesday, thursday, friday;
+        monday = new ArrayList<>();
+        tuesday = new ArrayList<>();
+        wednesday = new ArrayList<>();
+        thursday = new ArrayList<>();
+        friday = new ArrayList<>();
+
+        for(Event event : events) {
+
+            switch (event.getDay()) {
+                case "Monday":
+                    monday.add(event);
+                    break;
+                case "Tuesday":
+                    tuesday.add(event);
+                    break;
+                case "Wednesday":
+                    wednesday.add(event);
+                    break;
+                case "Thursday":
+                    thursday.add(event);
+                    break;
+                case "Friday":
+                    friday.add(event);
+                    break;
             }
-        });
+        }
+
+        return new Event[][] {
+                monday.toArray(new Event[monday.size()]),
+                tuesday.toArray(new Event[tuesday.size()]),
+                wednesday.toArray(new Event[wednesday.size()]),
+                thursday.toArray(new Event[thursday.size()]),
+                friday.toArray(new Event[friday.size()])
+        };
     }
 }

@@ -1,173 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<TableLayout
+<LinearLayout
     android:id="@+id/calendar"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TableRow
-        android:background="#4ccc" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#accc">
 
-        <Space />
+        <View
+            android:layout_width="75dp"
+            android:layout_height="match_parent"
+            android:background="#ccc" />
 
         <TextView
             android:id="@+id/day"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:padding="8dp"
-            android:textColor="#222" />
+            android:gravity="center"
+            android:padding="6dp"
+            android:textColor="#222"
+            android:text="Mon" />
 
-    </TableRow>
+    </LinearLayout>
 
-    <TableRow
-        android:layout_weight="1">
+    <ca.delilaheve.timetable.view.CalendarLayout
+        android:id="@+id/calendarItems"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-        <TableLayout
-            android:layout_height="match_parent"
-            android:background="#4ccc" >
-
-            <TableRow
-                android:layout_weight="1">
-
-                <TextView
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="#222"
-                    android:text="8am"/>
-
-            </TableRow>
-
-            <TableRow
-                android:layout_weight="1" >
-
-                <TextView
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="#222"
-                    android:text="9am"/>
-
-            </TableRow>
-
-            <TableRow
-                android:layout_weight="1">
-
-                <TextView
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="#222"
-                    android:text="10am"/>
-
-            </TableRow>
-
-            <TableRow
-                android:layout_weight="1" >
-
-                <TextView
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="#222"
-                    android:text="11am"/>
-
-            </TableRow>
-
-            <TableRow
-                android:layout_weight="1">
-
-                <TextView
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="#222"
-                    android:text="12pm"/>
-
-            </TableRow>
-
-            <TableRow
-                android:layout_weight="1" >
-
-                <TextView
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="#222"
-                    android:text="1pm"/>
-
-            </TableRow>
-
-            <TableRow
-                android:layout_weight="1">
-
-                <TextView
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="#222"
-                    android:text="2pm"/>
-
-            </TableRow>
-
-            <TableRow
-                android:layout_weight="1" >
-
-                <TextView
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="#222"
-                    android:text="3pm"/>
-
-            </TableRow>
-
-            <TableRow
-                android:layout_weight="1">
-
-                <TextView
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="#222"
-                    android:text="4pm"/>
-
-            </TableRow>
-
-            <TableRow
-                android:layout_weight="1" >
-
-                <TextView
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="#222"
-                    android:text="5pm"/>
-
-            </TableRow>
-
-            <TableRow
-                android:layout_weight="1">
-
-                <TextView
-                    android:paddingLeft="12dp"
-                    android:paddingRight="12dp"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="#222"
-                    android:text="6pm"/>
-
-            </TableRow>
-
-        </TableLayout>
-
-        <GridLayout
-            android:id="@+id/calendarItems"
-            android:layout_weight="1"
-            android:layout_height="fill_parent"
-            android:rowCount="44"
-            android:columnCount="1" />
-
-    </TableRow>
-
-</TableLayout>
+</LinearLayout>

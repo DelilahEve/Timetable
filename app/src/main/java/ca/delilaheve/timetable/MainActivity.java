@@ -41,18 +41,26 @@ public class MainActivity extends AppCompatActivity {
     public static final int MODE_DAY = 0;
     public static final int MODE_WEEK = 1;
 
-    private WeekFragment weekFragment;
-    private DayViewFragment dayFragment;
     private PasswordFragment passwordFragment;
 
     private DrawerLayout drawer;
 
     private Toolbar toolbar;
 
+    private int viewMode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Check Preferences
+        SharedPreferences preferences = getSharedPreferences(SettingsFragment.prefsFile, 0);
+        viewMode = preferences.getInt(SettingsFragment.KEY_DEFAULT_VIEW, MODE_WEEK);
+
+//        userID = preferences.getInt("userID", -1);
+//        if(userID != -1)
+//            unlocked = true;
 
         // Set toolbar as Action bar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -70,29 +78,12 @@ public class MainActivity extends AppCompatActivity {
         // Add Nav drawer
         manager.beginTransaction().replace(R.id.leftDrawer, new NavDrawerFragment()).commit();
 
-        weekFragment = new WeekFragment();
-        dayFragment = new DayViewFragment();
         passwordFragment = new PasswordFragment();
-
-        // Check Preferences
-        SharedPreferences preferences = getSharedPreferences(SettingsFragment.prefsFile, 0);
-        int viewMode = preferences.getInt(SettingsFragment.KEY_DEFAULT_VIEW, MODE_WEEK);
-
-        // Add Fragment
-        FragmentTransaction transaction = manager.beginTransaction();
-        switch (viewMode) {
-            case MODE_DAY:
-                transaction.replace(R.id.contentFrame, dayFragment);
-                break;
-            case MODE_WEEK:
-            default:
-                transaction.replace(R.id.contentFrame, weekFragment);
-                break;
-        }
-        transaction.commit();
 
         if(!unlocked)
             manager.beginTransaction().add(R.id.passwordFrame, passwordFragment, "password").commit();
+        else
+            setViewMode(viewMode);
     }
 
     @Override
@@ -136,12 +127,10 @@ public class MainActivity extends AppCompatActivity {
 
         switch (viewMode) {
             case MODE_DAY:
-                manager.beginTransaction().replace(R.id.contentFrame, dayFragment).commit();
-                //dayFragment.update();
+                manager.beginTransaction().replace(R.id.contentFrame, new DayViewFragment()).commit();
                 break;
             case MODE_WEEK:
-                manager.beginTransaction().replace(R.id.contentFrame, weekFragment).commit();
-                //weekFragment.update();
+                manager.beginTransaction().replace(R.id.contentFrame, new WeekFragment()).commit();
                 break;
         }
     }
@@ -186,6 +175,9 @@ public class MainActivity extends AppCompatActivity {
         // set state to unlocked
         unlocked = true;
 
-        weekFragment.update();
+        SharedPreferences preferences = getSharedPreferences(SettingsFragment.prefsFile, 0);
+        preferences.edit().putInt("userID", userID).apply();
+
+        setViewMode(viewMode);
     }
 }
