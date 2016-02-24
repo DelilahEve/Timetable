@@ -11,12 +11,17 @@ import android.widget.Spinner;
 
 import ca.delilaheve.timetable.R;
 import ca.delilaheve.timetable.adapter.SimpleAdapter;
+import ca.delilaheve.timetable.data.Color;
 import ca.delilaheve.timetable.database.Column;
 import ca.delilaheve.timetable.database.Database;
 
-public class AddEventDialog {
+public class AddEventDialog implements ColorPick {
 
     private AlertDialog.Builder builder;
+
+    private View colorPreview;
+
+    private Color color;
 
     public AddEventDialog(final Context context) {
         builder = new AlertDialog.Builder(context);
@@ -35,6 +40,7 @@ public class AddEventDialog {
         endTime = (EditText) view.findViewById(R.id.endTime);
         location = (EditText) view.findViewById(R.id.location);
         eventDescription = (EditText) view.findViewById(R.id.eventDescription);
+        colorPreview = view.findViewById(R.id.colorPreview);
 
         weekdays = (Spinner) view.findViewById(R.id.dayOfWeek);
 
@@ -51,6 +57,13 @@ public class AddEventDialog {
             public void onClick(View v) {
                 TimePickerDialog timePicker = new TimePickerDialog(context, endTime);
                 timePicker.show();
+            }
+        });
+
+        colorPreview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ColorPickerDialog(context, AddEventDialog.this);
             }
         });
 
@@ -92,6 +105,11 @@ public class AddEventDialog {
 
     public void show() {
         builder.create().show();
+    }
+
+    public void setColor(Color c) {
+        colorPreview.setBackgroundColor(c.makeColor());
+        color = c;
     }
 
 }

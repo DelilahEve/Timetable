@@ -39,6 +39,11 @@ public class AddUserDialog {
     private EditText lastName;
     private EditText password;
 
+    // Edit mode flag > true if given user details
+    private Boolean isEdit = false;
+
+    private User user;
+
     public AddUserDialog(Context context) {
         addedCourses = new ArrayList<>();
         this.context = context;
@@ -87,6 +92,13 @@ public class AddUserDialog {
         builder.create().show();
     }
 
+    public void editUser(User user) {
+        this.user = user;
+        Database db = new Database(context);
+
+        // Populate here
+    }
+
     private void saveUser() {
         String name, pass, account;
 
@@ -105,7 +117,6 @@ public class AddUserDialog {
         }
 
         Database db = new Database(context);
-        // Add people data
 
         Column[] peopleCol = Database.COL_PEOPLE;
 
@@ -116,7 +127,13 @@ public class AddUserDialog {
         values.put(peopleCol[3].getColumnName(), account);
 
         Table people = db.people;
-        int peopleID = (int) people.add(values);
+        int peopleID;
+        if(!isEdit)
+            peopleID = (int) people.add(values);
+        else {
+            people.update(values, user.getId());
+            peopleID = user.getId();
+        }
 
         // Add course list data
         Column[] courseListCol = Database.COL_CLASS_LIST;
@@ -128,7 +145,10 @@ public class AddUserDialog {
             v.put(courseListCol[1].getColumnName(), course.getId());
             v.put(courseListCol[2].getColumnName(), peopleID);
 
-            courseList.add(v);
+            if(!isEdit)
+                courseList.add(v);
+            else
+                courseList.update(v, course.getListID());
         }
     }
 
